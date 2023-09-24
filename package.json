@@ -12,7 +12,7 @@
     "copy-assets": "cp -r node_modules/bootstrap/dist/js static/"
   },
   "author": "",
-  "license": "ISC",
+  "license": "CC0-1.0",
   "dependencies": {
     "bootstrap": "^5.3.2",
     "sass": "^1.68.0"
