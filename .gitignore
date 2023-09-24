@@ -1,1 +1,8 @@
 /target
+
+# js
+node_modules/
+
+# compiled static
+static/*
+!static/.gitkeep

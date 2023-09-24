@@ -1,0 +1,23 @@
+{
+  "name": "actix-login",
+  "version": "1.0.0",
+  "description": "Looking at login with Actix web.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "npm run build-css && npm run copy-assets",
+    "build-css": "sass --style compressed assets/main.scss static/main.min.css",
+    "copy-assets": "cp -r node_modules/bootstrap/dist/js static/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.2",
+    "sass": "^1.68.0"
+  },
+  "engines": {
+    "node": "19"
+  }
+}
