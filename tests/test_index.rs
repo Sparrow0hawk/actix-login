@@ -1,23 +1,43 @@
-use actix_login::routes::index;
-use actix_web::{http::header::ContentType, test, web, App};
+use std::net::TcpListener;
+
 use scraper::Selector;
+
+pub struct TestApp {
+    pub address: String,
+}
 
 #[actix_web::test]
 async fn test_index() {
-    let app =
-        test::init_service(App::new().route("/", web::get().to(index))).await;
+    let app = spawn_app().await;
 
-    let req = test::TestRequest::default()
-        .insert_header(ContentType::plaintext())
-        .to_request();
+    let client = reqwest::Client::new();
 
-    let resp = test::call_and_read_body(&app, req).await;
+    let resp = client
+        .get(&format!("{}/", &app.address))
+        .send()
+        .await
+        .expect("Failed to execute request");
 
-    let page_str = std::str::from_utf8(&resp).unwrap();
+    let page_str = &resp.text().await.unwrap();
 
     let page = get_page_element(page_str, "h1");
 
     assert_eq!(page, "Hello world!")
+}
+
+async fn spawn_app() -> TestApp {
+    let listener =
+        TcpListener::bind("127.0.0.1:0").expect("Could not bind random port");
+
+    let port = listener.local_addr().unwrap().port();
+    let address = format!("http://127.0.0.1:{}", port);
+
+    let server =
+        actix_login::startup::run(listener).expect("Failed to bind address");
+
+    let _ = tokio::spawn(server);
+
+    TestApp { address }
 }
 
 fn get_page_element(body: &str, element: &str) -> String {
