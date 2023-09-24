@@ -1,5 +1,6 @@
 use actix_login::routes::index;
 use actix_web::{http::header::ContentType, test, web, App};
+use scraper::Selector;
 
 #[actix_web::test]
 async fn test_index() {
@@ -10,7 +11,19 @@ async fn test_index() {
         .insert_header(ContentType::plaintext())
         .to_request();
 
-    let resp = test::call_service(&app, req).await;
+    let resp = test::call_and_read_body(&app, req).await;
 
-    assert!(resp.status().is_success())
+    let page_str = std::str::from_utf8(&resp).unwrap();
+
+    let page = get_page_element(page_str, "h1");
+
+    assert_eq!(page, "Hello world!")
+}
+
+fn get_page_element(body: &str, element: &str) -> String {
+    let fragment = scraper::Html::parse_document(body);
+
+    let selector = Selector::parse(element).unwrap();
+
+    fragment.select(&selector).next().unwrap().inner_html()
 }
