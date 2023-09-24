@@ -17,12 +17,14 @@
         </div>
     </nav>
     <div class="container-fluid text-center">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 text-left">
-            {% block content %}
-            {% endblock %}
+        <div class="row content">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 text-left">
+                {% block content %}
+                {% endblock %}
+            </div>
+            <div class="col-sm-2"></div>
         </div>
-        <div class="col-sm-2"></div>
     </div>
     <footer class="container-fluid text-center">
     </footer>
