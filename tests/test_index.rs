@@ -1,10 +1,6 @@
-use std::net::TcpListener;
+mod fixtures;
 
-use scraper::Selector;
-
-pub struct TestApp {
-    pub address: String,
-}
+use fixtures::{get_page_element, spawn_app};
 
 #[actix_web::test]
 async fn test_index() {
@@ -23,27 +19,4 @@ async fn test_index() {
     let page = get_page_element(page_str, "h1");
 
     assert_eq!(page, "Hello world!")
-}
-
-async fn spawn_app() -> TestApp {
-    let listener =
-        TcpListener::bind("127.0.0.1:0").expect("Could not bind random port");
-
-    let port = listener.local_addr().unwrap().port();
-    let address = format!("http://127.0.0.1:{}", port);
-
-    let server =
-        actix_login::startup::run(listener).expect("Failed to bind address");
-
-    let _ = tokio::spawn(server);
-
-    TestApp { address }
-}
-
-fn get_page_element(body: &str, element: &str) -> String {
-    let fragment = scraper::Html::parse_document(body);
-
-    let selector = Selector::parse(element).unwrap();
-
-    fragment.select(&selector).next().unwrap().inner_html()
 }
