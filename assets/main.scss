@@ -5,3 +5,7 @@ $prefix: "mo-";
 
 // Then import Bootstrap
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+.form-group {
+    margin-bottom: 1rem;
+}

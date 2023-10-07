@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-use crate::routes::index;
+use crate::routes::{index, login};
 
 use actix_files as fs;
 use actix_web::dev::Server;
