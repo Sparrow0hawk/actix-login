@@ -20,4 +20,4 @@ COPY ./static /app/static
 COPY --from=builder /usr/src/app/actix_login /app/actix_login
 
 # Run the app
-CMD ./actix_login
+CMD ./actix_login --port 8080 --host 0.0.0.0
