@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-use crate::routes::{index, login};
+use crate::routes::{index, login_form, login_post};
 
 use actix_files as fs;
 use actix_web::dev::Server;
@@ -11,7 +11,8 @@ pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(index))
-            .route("/login", web::get().to(login))
+            .route("/login", web::get().to(login_form))
+            .route("/login", web::post().to(login_post))
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .service(fs::Files::new("/static", "./static"))
