@@ -64,5 +64,5 @@ async fn test_login_form_logs_in() {
         .await
         .expect("Failed to execute request");
 
-    assert_eq!(resp.headers().get("LOCATION").unwrap(), "/")
+    assert_eq!(resp.headers().get("LOCATION").unwrap(), "/secure")
 }

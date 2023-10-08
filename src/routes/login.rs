@@ -1,5 +1,6 @@
+use actix_session::Session;
 use actix_web::http::header::LOCATION;
-use actix_web::{error, web, HttpResponse, Responder};
+use actix_web::{error, web, Error, HttpResponse, Responder};
 use askama::Template;
 use derive_more::{Display, Error};
 
@@ -21,16 +22,18 @@ pub struct FormData {
 
 pub async fn login_post(
     form: web::Form<FormData>,
-) -> Result<HttpResponse, LoginError> {
+    session: Session,
+) -> Result<HttpResponse, Error> {
     let username = form.0.username;
     let password = form.0.password;
 
     if username == "foo" && password == "bar" {
+        session.insert("user", "foo")?;
         Ok(HttpResponse::SeeOther()
-            .insert_header((LOCATION, "/"))
+            .insert_header((LOCATION, "/secure"))
             .finish())
     } else {
-        Err(LoginError {})
+        Err(LoginError {}.into())
     }
 }
 
