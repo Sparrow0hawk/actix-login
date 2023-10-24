@@ -8,9 +8,15 @@ use derive_more::{Display, Error};
 #[template(path = "login.html")]
 struct LoginTemplate;
 
-pub async fn login_form() -> impl Responder {
-    let template = LoginTemplate;
-    HttpResponse::Ok().body(template.render().unwrap())
+pub async fn login_form(session: Session) -> impl Responder {
+    if let Some(_user) = session.get::<String>("user").unwrap() {
+        HttpResponse::SeeOther()
+            .insert_header((LOCATION, "/"))
+            .finish()
+    } else {
+        let template = LoginTemplate;
+        HttpResponse::Ok().body(template.render().unwrap())
+    }
 }
 
 // TODO: think about secrey crate for password
