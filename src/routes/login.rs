@@ -6,7 +6,9 @@ use derive_more::{Display, Error};
 
 #[derive(Template)]
 #[template(path = "login.html")]
-struct LoginTemplate;
+struct LoginTemplate {
+    user: Option<String>,
+}
 
 pub async fn login_form(session: Session) -> impl Responder {
     if let Some(_user) = session.get::<String>("user").unwrap() {
@@ -14,7 +16,7 @@ pub async fn login_form(session: Session) -> impl Responder {
             .insert_header((LOCATION, "/"))
             .finish()
     } else {
-        let template = LoginTemplate;
+        let template = LoginTemplate { user: None };
         HttpResponse::Ok().body(template.render().unwrap())
     }
 }
