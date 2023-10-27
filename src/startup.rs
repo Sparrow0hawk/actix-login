@@ -1,6 +1,6 @@
 use std::net::TcpListener;
 
-use crate::routes::{index, login_form, login_post, secure};
+use crate::routes::{index, login_form, login_post, logout, secure};
 
 use actix_files as fs;
 use actix_session::storage::CookieSessionStore;
@@ -23,6 +23,7 @@ pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
             .route("/login", web::get().to(login_form))
             .route("/login", web::post().to(login_post))
             .route("/secure", web::get().to(secure))
+            .route("/logout", web::get().to(logout))
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .service(fs::Files::new("/static", "./static"))
